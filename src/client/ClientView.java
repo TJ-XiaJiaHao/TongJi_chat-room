@@ -133,6 +133,7 @@ public class ClientView extends Thread {
                     serverPORT = port;
                     currentUser = user;
                     listModel.addElement("GroupChat");
+                    
                     client.connect(serverIP, Integer.parseInt(port), user);
                     isGroup = true;
                     chatUser = "GroupChat";
@@ -155,16 +156,17 @@ public class ClientView extends Thread {
 
         // 发送消息
         btn_send.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
 
                 String message = txt_msg.getText();
                 if (!message.isEmpty() && !isGroup) {
+                	System.out.println("p2p chat");
                     client.sendMessage("P2P[#]" + message + "[#]" + chatUser);
                     receiveMessage(currentUser, message);
                     txt_msg.setText("");
                 } else if (!message.isEmpty() && isGroup) {
+                	System.out.println("group chat");
                     client.sendMessage("GROUP[#]" + message);
                     txt_msg.setText("");
                     receiveMessage(currentUser, message);
@@ -199,7 +201,7 @@ public class ClientView extends Thread {
             }
         });
 
-        // 切换窗口
+        // 切换窗口，点击左侧选择不同窗口对象
         userList.addListSelectionListener(new ListSelectionListener() {
 
             public void valueChanged(ListSelectionEvent e) {
@@ -220,7 +222,9 @@ public class ClientView extends Thread {
  					isGroup = false;
  				}
                 textArea.setText("");
+                System.out.println("OK");
                 List<String> chatRecords = client.getChatRecords(chatUser);
+                System.out.println("cr size in cv : " + chatRecords.size());
                 for (int j = 0; j < chatRecords.size(); j++) {
                 	StringTokenizer stringTokenizer = new StringTokenizer(chatRecords.get(j), "[#]");
                     receiveMessage(stringTokenizer.nextToken(), stringTokenizer.nextToken());
@@ -346,14 +350,15 @@ public class ClientView extends Thread {
 
         frame.setVisible(true);
     }
-
+    
+    //把信息message显示到用户user的文字域中
     public void receiveMessage(String user, String message) {
         textArea.append(user + " :\r\n");
         textArea.append("        ");
         textArea.append(message);
         textArea.append("\r\n\r\n");
     }
-
+    //更新窗口，如果要更新的窗口就是当前窗口，那么直接添加文字，如果不是，就显示一条新消息提醒
     public void updateGUI(String command, String message, String sender) {
         if (command.equals("GROUP")) {
             if (chatUser.equals("GroupChat")) {

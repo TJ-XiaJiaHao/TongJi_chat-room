@@ -5,11 +5,12 @@ import java.io.IOException;
 public class ServerMain {
   public static void main(String args[]) {
     if (args.length != 1) {
-      System.out.println("璇峰湪鍛戒护琛屽弬鏁颁腑缁欏嚭绔彛鍙凤紝java Server [port]");
-      return;
+      //System.out.println("请在命令行参数中给出端口号，java Server [port]");
+      //return;
     }
     try {
-      int port = Integer.parseInt(args[0]);
+      //int port = Integer.parseInt(args[0]);
+      int port = 8080;
       ChatServer cs = new ChatServer(port);
       FileServer fs = new FileServer(port + 1);
       cs.start();

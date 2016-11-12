@@ -5,18 +5,11 @@ import java.net.*;
 import java.util.StringTokenizer;
 import java.util.Random;
 
-public class FileClient extends Thread {
-  private String serverIP;
-  private String username;
-  private int port;
+public class FileClient extends ClientBasic {
   DataOutputStream sender;
   DataInputStream getter;
-  Socket socket;
-  boolean stopFile = false;
-  Client parentThread;
   ListenerThread listener;
 
-  public void stopFileThread() { stopFile = true; }
 
   public FileClient(String serverIP, int port, String username, Client parentThread) throws IOException {
     this.serverIP = serverIP;
@@ -31,6 +24,7 @@ public class FileClient extends Thread {
     listener.start();
   }
 
+  @Override
   public void sendFile(String info, String filename) {
     try {
       File file = new File(filename);
@@ -48,9 +42,10 @@ public class FileClient extends Thread {
     }
   }
 
+  @Override
   public void run() {
     try {
-      while (!stopFile) {
+      while (!stopThread) {
         // ...
       }
       listener.shutdown();
@@ -92,4 +87,5 @@ public class FileClient extends Thread {
     }
     public void shutdown() { stop = true; }
   }
+
 }

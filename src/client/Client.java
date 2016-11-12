@@ -23,7 +23,7 @@ public class Client extends Thread {
     }
   }
 
-  // ä¸ºGUIè¿æ¥æŒ‰é’®æä¾›æœåŠ¡
+  // ÎªGUIÁ¬½Ó°´Å¥Ìá¹©·şÎñ
   public void connect(String ip, int port, String username) {
     try {
       this.username = username;
@@ -32,11 +32,14 @@ public class Client extends Thread {
       chatRecords.put("GroupChat", new ArrayList<String>());
     } catch (Exception e) {
       //...
+        System.out.println("error");
     }
   }
 
-  // ä¸ºGUIå‘é€æ¶ˆæ¯æä¾›æœåŠ¡
+  // ÎªGUI·¢ËÍÏûÏ¢Ìá¹©·şÎñ
   public void sendMessage(String message) {
+	  System.out.println("cr size in c : " + chatRecords.size());
+	System.out.println("c send! message is :" + message);
     if (message.equals("[OFFLINE]")) {
       cc.sendMessage(message);
       return;
@@ -52,45 +55,46 @@ public class Client extends Thread {
       chatRecords.get("GroupChat").add(username + "[#]" + msg);
       // System.out.println(chatRecords.get("GroupChat").get(chatRecords.get("GroupChat").size()-1));
     }
+    
     cc.sendMessage(message);
   }
 
-  // ä¸ºGUIé€€å‡ºæŒ‰é’®æä¾›æœåŠ¡
+  // ÎªGUIÍË³ö°´Å¥Ìá¹©·şÎñ
   public void disconnect() {
-    cc.stopChatThread();
-    fc.stopFileThread();
+    cc.stopThread();
+    fc.stopThread();
     stopClient = true;
   }
 
-  // è·å–å¯¹åº”ç”¨æˆ·çš„èŠå¤©è®°å½•
+  // »ñÈ¡¶ÔÓ¦ÓÃ»§µÄÁÄÌì¼ÇÂ¼
   public List<String> getChatRecords(String username) {
     return chatRecords.get(username);
   }
 
-  // ä¸ºGUIçš„å‘é€æ–‡ä»¶æŒ‰é’®æä¾›æœåŠ¡
+  // ÎªGUIµÄ·¢ËÍÎÄ¼ş°´Å¥Ìá¹©·şÎñ
   public void sendFile(String info, String filename) {
     fc.sendFile(info, filename);
   }
 
-  // ä¸ºèŠå¤©çº¿ç¨‹æ”¶åˆ°æ–°æ¶ˆæ¯æä¾›æœåŠ¡
+  // ÎªÁÄÌìÏß³ÌÊÕµ½ĞÂÏûÏ¢Ìá¹©·şÎñ
   public void receiveMessage(String message) {
     StringTokenizer tokenizer = new StringTokenizer(message, "[#]");
     String command = tokenizer.nextToken();
     String usr = tokenizer.nextToken();
-    if (command.equals("INFO") || command.equals("ONLINE")) {// åœ¨çº¿ç”¨æˆ·åŠæœ‰äººä¸Šçº¿
+    if (command.equals("INFO") || command.equals("ONLINE")) {// ÔÚÏßÓÃ»§¼°ÓĞÈËÉÏÏß
       String ip = tokenizer.nextToken();
       String port = tokenizer.nextToken();
       chatRecords.put(usr, new ArrayList<String>());
       clientView.updateGUI("ONLINE", usr, "");
-    } else if (command.equals("GROUP")) {// ç¾¤èŠæ¶ˆæ¯
+    } else if (command.equals("GROUP")) {// ÈºÁÄÏûÏ¢
       String msg = tokenizer.nextToken();
       chatRecords.get("GroupChat").add(usr + "[#]" + msg);
       clientView.updateGUI("GROUP", msg, usr);
-    } else if (command.equals("P2P")) {// ç§èŠæ¶ˆæ¯
+    } else if (command.equals("P2P")) {// Ë½ÁÄÏûÏ¢
       String msg = tokenizer.nextToken();
       chatRecords.get(usr).add(usr + "[#]" + msg);
       clientView.updateGUI("P2P", msg, usr);
-    } else if (command.equals("OFFLINE")) {// æœ‰äººä¸‹çº¿
+    } else if (command.equals("OFFLINE")) {// ÓĞÈËÏÂÏß
       String ip = tokenizer.nextToken();
       String port = tokenizer.nextToken();
       chatRecords.remove(usr);
@@ -98,7 +102,7 @@ public class Client extends Thread {
     } else if (command.equals("FILE")) {
       String filename = tokenizer.nextToken();
       String username = tokenizer.nextToken();
-      clientView.updateGUI("FILE", username + "å‘ä½ å‘é€äº†æ–‡ä»¶" + filename, "");
+      clientView.updateGUI("FILE", username + "ÏòÄã·¢ËÍÁËÎÄ¼ş" + filename, "");
     }
   }
 }

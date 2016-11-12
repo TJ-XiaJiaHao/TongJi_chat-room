@@ -13,7 +13,7 @@ public class ChatServer extends Thread {
     server = new ServerSocket(port);
     System.out.println("ChatServer start at 127.0.0.1:" + port);
   }
-  // æœåŠ¡å™¨ä¸»ç¨‹åº
+  // ·şÎñÆ÷Ö÷³ÌĞò
   public void run() {
     while (true) {
       try {
@@ -26,7 +26,7 @@ public class ChatServer extends Thread {
     }
   }
 
-  // ä¸ºå®¢æˆ·ç«¯æä¾›æœåŠ¡çš„çº¿ç¨‹ç±»
+  // Îª¿Í»§¶ËÌá¹©·şÎñµÄÏß³ÌÀà
   private class ClientThread extends Thread {
     private Socket sock;
     private BufferedReader getter;
@@ -45,9 +45,9 @@ public class ChatServer extends Thread {
         this.getter = new BufferedReader(new InputStreamReader(sock.getInputStream()));
         this.sender = new PrintWriter(sock.getOutputStream(), true);
         this.username = getter.readLine();
-        // å°†æ–°ä¸Šçº¿ç”¨æˆ·ä¿¡æ¯ç¾¤å‘ç»™å…¶ä»–æ‰€æœ‰å·²åœ¨çº¿ç”¨æˆ·
+        // ½«ĞÂÉÏÏßÓÃ»§ĞÅÏ¢Èº·¢¸øÆäËûËùÓĞÒÑÔÚÏßÓÃ»§
         sendToAllUser("ONLINE[#]" + username + "[#]" + getIP() + "[#]" + getPort());
-        // å°†å½“å‰åœ¨çº¿ç”¨æˆ·ä¿¡æ¯å‘é€ç»™æ–°ä¸Šçº¿ç”¨æˆ·
+        // ½«µ±Ç°ÔÚÏßÓÃ»§ĞÅÏ¢·¢ËÍ¸øĞÂÉÏÏßÓÃ»§
         for (int i = 0; i < clients.size(); ++i) {
           if (clients.get(i).getIdentifier().equals(this.getIdentifier()))
             continue;
@@ -61,7 +61,7 @@ public class ChatServer extends Thread {
       }
     }
 
-    // ç¾¤å‘æ¶ˆæ¯
+    // Èº·¢ÏûÏ¢
     private void sendToAllUser(String message) {
       for (int i = 0; i < clients.size(); ++i) {
         if (clients.get(i).getIdentifier().equals(this.getIdentifier()))
@@ -71,7 +71,7 @@ public class ChatServer extends Thread {
       }
     }
 
-    // ç§èŠæ¶ˆæ¯
+    // Ë½ÁÄÏûÏ¢
     private void sendToSpecificUser(String message, String dest) {
       for (int i = 0; i < clients.size(); ++i) {
         if (clients.get(i).getUsername().equals(dest)) {
@@ -86,17 +86,17 @@ public class ChatServer extends Thread {
       while (true) {
         try {
           line = getter.readLine();
-          if (line.equals("[OFFLINE]")) {// ç”¨æˆ·ä¸‹çº¿
+          if (line.equals("[OFFLINE]")) {// ÓÃ»§ÏÂÏß
             offline();
             return;
-          } else {// æ™®é€šæ¶ˆæ¯
+          } else {// ÆÕÍ¨ÏûÏ¢
             System.out.println(line);
             StringTokenizer tokenizer = new StringTokenizer(line, "[#]");
             String command = tokenizer.nextToken();
             String message = tokenizer.nextToken();
-            if (command.equals("GROUP")) {// ç¾¤èŠæ¶ˆæ¯
+            if (command.equals("GROUP")) {// ÈºÁÄÏûÏ¢
               sendToAllUser("GROUP[#]" + username + "[#]" + message);
-            } else {// ç§èŠæ¶ˆæ¯
+            } else {// Ë½ÁÄÏûÏ¢
               String dest = tokenizer.nextToken();
               sendToSpecificUser("P2P[#]" + username + "[#]" + message, dest);
             }
@@ -108,7 +108,7 @@ public class ChatServer extends Thread {
       }
     }
 
-    // ç”¨æˆ·ä¸‹çº¿ï¼Œè½¬å‘Šå…¶ä»–ç”¨æˆ·ï¼Œå…³é—­socketèµ„æºå¹¶ç§»é™¤è¯¥çº¿ç¨‹
+    // ÓÃ»§ÏÂÏß£¬×ª¸æÆäËûÓÃ»§£¬¹Ø±Õsocket×ÊÔ´²¢ÒÆ³ı¸ÃÏß³Ì
     private void offline() {
       try {
         sendToAllUser("OFFLINE[#]" + username + "[#]" + getIP() + "[#]" + getPort());

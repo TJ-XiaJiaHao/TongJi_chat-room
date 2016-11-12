@@ -13,7 +13,7 @@ public class FileServer extends Thread {
     server = new ServerSocket(port);
     System.out.println("FileServer start at 127.0.0.1:" + port);
   }
-  // æœåŠ¡å™¨ä¸»ç¨‹åº
+  // ·şÎñÆ÷Ö÷³ÌĞò
   public void run() {
     while (true) {
       try {
@@ -26,7 +26,7 @@ public class FileServer extends Thread {
     }
   }
 
-  // ä¸ºå®¢æˆ·ç«¯æä¾›æœåŠ¡çš„çº¿ç¨‹ç±»
+  // Îª¿Í»§¶ËÌá¹©·şÎñµÄÏß³ÌÀà
   private class ClientThread extends Thread {
     private Socket sock;
     private DataInputStream getter;
@@ -50,7 +50,7 @@ public class FileServer extends Thread {
       }
     }
 
-    // ç¾¤å‘æ–‡ä»¶æ•°æ®
+    // Èº·¢ÎÄ¼şÊı¾İ
     private void sendFileToAllUser(byte[] buff, int length) {
       try {
         for (int i = 0; i < clients.size(); ++i) {
@@ -64,7 +64,7 @@ public class FileServer extends Thread {
       }
     }
 
-    // ç¾¤å‘æ–‡ä»¶åŸºæœ¬ä¿¡æ¯ï¼Œæ–‡ä»¶åå’Œæ–‡ä»¶é•¿åº¦
+    // Èº·¢ÎÄ¼ş»ù±¾ĞÅÏ¢£¬ÎÄ¼şÃûºÍÎÄ¼ş³¤¶È
     private void sendBasicInfoToAllUser(String fileInfo, long fileLength) {
       try {
         for (int i = 0; i < clients.size(); ++i) {
@@ -80,7 +80,7 @@ public class FileServer extends Thread {
       }
     }
 
-    // å‘é€æ–‡ä»¶æ•°æ®ç»™ç‰¹å®šç”¨æˆ·
+    // ·¢ËÍÎÄ¼şÊı¾İ¸øÌØ¶¨ÓÃ»§
     private void sendFileToSpecificUser(byte[] buff, int length, String dest) {
       try {
         for (int i = 0; i < clients.size(); ++i) {
@@ -95,7 +95,7 @@ public class FileServer extends Thread {
       }
     }
 
-    // å‘é€æ–‡ä»¶åŸºæœ¬ä¿¡æ¯ç»™ç‰¹å®šç”¨æˆ·
+    // ·¢ËÍÎÄ¼ş»ù±¾ĞÅÏ¢¸øÌØ¶¨ÓÃ»§
     private void sendBasicInfoToSpecificUser(String fileInfo, long fileLength, String dest) {
       try {
         for (int i = 0; i < clients.size(); ++i) {
@@ -127,10 +127,10 @@ public class FileServer extends Thread {
           String dest = null;
           boolean toAll = false;
           long fileLength = getter.readLong();
-          if (command.equals("GROUP")) {// ç¾¤å‘æ–‡ä»¶
+          if (command.equals("GROUP")) {// Èº·¢ÎÄ¼ş
             sendBasicInfoToAllUser("GROUP[#]" + fileName + "[#]" + username, fileLength);
             toAll = true;
-          } else if (command.equals("P2P")) {// ç§å‘æ–‡ä»¶
+          } else if (command.equals("P2P")) {// Ë½·¢ÎÄ¼ş
             dest = stringTokenizer.nextToken();
             sendBasicInfoToSpecificUser("P2P[#]" + fileName + "[#]" + username, fileLength, dest);
           }
@@ -150,7 +150,7 @@ public class FileServer extends Thread {
       }
     }
 
-    // ç”¨æˆ·ä¸‹çº¿ï¼Œå…³é—­socketèµ„æºå¹¶ç§»é™¤è¯¥çº¿ç¨‹
+    // ÓÃ»§ÏÂÏß£¬¹Ø±Õsocket×ÊÔ´²¢ÒÆ³ı¸ÃÏß³Ì
     private void offline() {
       try {
         System.out.println("FileServer: [OFFLINE] [" + username + "] [" + getIP() + ":" + getPort() + "]");
