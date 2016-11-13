@@ -24,9 +24,9 @@ public class ChatClient extends ClientBasic {
 	}
 
 	@Override
-	public void sendMessage(String message) {
+	public void send(String... message) {
 		System.out.println("cc send!");
-		sender.println(message);
+		sender.println(message[0]);
 		sender.flush();
 	}
 

@@ -41,7 +41,7 @@ public class Client extends Thread {
 	  System.out.println("cr size in c : " + chatRecords.size());
 	System.out.println("c send! message is :" + message);
     if (message.equals("[OFFLINE]")) {
-      cc.sendMessage(message);
+      cc.send(message);
       return;
     }
     StringTokenizer tokenizer = new StringTokenizer(message, "[#]");
@@ -56,7 +56,7 @@ public class Client extends Thread {
       // System.out.println(chatRecords.get("GroupChat").get(chatRecords.get("GroupChat").size()-1));
     }
     
-    cc.sendMessage(message);
+    cc.send(message);
   }
 
   // 为GUI退出按钮提供服务
@@ -73,7 +73,7 @@ public class Client extends Thread {
 
   // 为GUI的发送文件按钮提供服务
   public void sendFile(String info, String filename) {
-    fc.sendFile(info, filename);
+    fc.send(info, filename);
   }
 
   // 为聊天线程收到新消息提供服务

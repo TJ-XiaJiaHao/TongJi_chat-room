@@ -25,11 +25,11 @@ public class FileClient extends ClientBasic {
   }
 
   @Override
-  public void sendFile(String info, String filename) {
+  public void send(String... info) {
     try {
-      File file = new File(filename);
+      File file = new File(info[1]);
       FileInputStream fis = new FileInputStream(file);
-      sender.writeUTF(info);
+      sender.writeUTF(info[0]);
       sender.writeLong(file.length());
       byte[] buff = new byte[1024];
       int length = 0;

@@ -14,9 +14,8 @@ abstract public class ClientBasic extends Thread {
 	  Client parentThread;
 	  
 	  public ClientBasic()  {};
-
 	  public void stopThread() { stopThread = true; }
-	  public void sendMessage(String message) {};
-	  public void sendFile(String Info,String fileName){};
+	  
+	  abstract public void send(String...arr);
 	  abstract public void run();
 }
