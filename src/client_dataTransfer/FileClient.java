@@ -1,8 +1,11 @@
-package client;
+package client_dataTransfer;
 
 import java.io.*;
 import java.net.*;
 import java.util.StringTokenizer;
+
+import client_business.Client;
+
 import java.util.Random;
 
 public class FileClient extends ClientBasic {

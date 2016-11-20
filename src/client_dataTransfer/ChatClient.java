@@ -1,7 +1,9 @@
-package client;
+package client_dataTransfer;
 
 import java.io.*;
 import java.net.*;
+
+import client_business.Client;
 
 
 public class ChatClient extends ClientBasic {

@@ -1,15 +1,21 @@
-package client;
+package client_business;
 
 import java.io.*;
 import java.util.StringTokenizer;
+
+import client_aview.ClientView;
+import client_dataTransfer.ClientBasic;
+import client_dataTransfer.ClientFactory;
+
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
 
 public class Client extends Thread {
-  private ChatClient cc;
-  private FileClient fc;
+	  private ClientFactory clientFactory = new ClientFactory();
+  private ClientBasic cc;
+  private ClientBasic fc;
   private ClientView clientView;
   private Map<String, ArrayList<String>> chatRecords = new HashMap<String, ArrayList<String>>();
   private boolean stopClient = false;
@@ -27,8 +33,8 @@ public class Client extends Thread {
   public void connect(String ip, int port, String username) {
     try {
       this.username = username;
-      cc = new ChatClient(ip, port, username, this);
-      fc = new FileClient(ip, port + 1, username, this);
+      cc = clientFactory.getClient("ChatClient", ip, port, username,this);
+      fc = clientFactory.getClient("FileClient", ip, port, username, this);
       chatRecords.put("GroupChat", new ArrayList<String>());
     } catch (Exception e) {
       //...
@@ -71,6 +77,7 @@ public class Client extends Thread {
     return chatRecords.get(username);
   }
 
+ 
   // 为GUI的发送文件按钮提供服务
   public void sendFile(String info, String filename) {
     fc.send(info, filename);

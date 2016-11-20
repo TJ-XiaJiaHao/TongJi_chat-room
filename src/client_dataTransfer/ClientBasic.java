@@ -1,9 +1,7 @@
-package client;
+package client_dataTransfer;
 
-import java.io.*;
 import java.net.*;
-import java.util.StringTokenizer;
-import java.util.Random;
+import client_business.Client;
 //可以是接口
 abstract public class ClientBasic extends Thread {
 	  protected String serverIP;

@@ -1,6 +1,7 @@
-import client.ClientView;
-import client.Client;
 import java.io.IOException;
+
+import client_aview.ClientView;
+import client_business.Client;
 
 public class ClientMain {
   public static void main(String args[]) {
