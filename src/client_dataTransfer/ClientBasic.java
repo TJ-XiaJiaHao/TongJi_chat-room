@@ -2,7 +2,7 @@ package client_dataTransfer;
 
 import java.net.*;
 import client_business.Client;
-//可以是接口
+
 abstract public class ClientBasic extends Thread {
 	  protected String serverIP;
 	  protected String username;

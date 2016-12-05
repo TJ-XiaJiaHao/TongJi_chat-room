@@ -28,6 +28,7 @@ public class FileClient extends ClientBasic {
   }
 
   @Override
+  public void stopThread() { stopThread = true; }
   public void send(String... info) {
     try {
       File file = new File(info[1]);

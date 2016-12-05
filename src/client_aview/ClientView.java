@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
+ * Created by Kris on 2016/10/30 0030.
  */
 public class ClientView extends Thread {
 
@@ -124,17 +125,16 @@ public class ClientView extends Thread {
                 String user = txt_name.getText();
 
                 if (ip.isEmpty() || port.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "IP地址和端口不能为�???",
+                    JOptionPane.showMessageDialog(frame, "IP地址和端口不能为空",
                                                   "", JOptionPane.WARNING_MESSAGE);
                 } else if (user.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "用户名不能为�???",
+                    JOptionPane.showMessageDialog(frame, "用户名不能为空",
                                                   "", JOptionPane.WARNING_MESSAGE);
                 } else {
                     serverIP = ip;
                     serverPORT = port;
                     currentUser = user;
                     listModel.addElement("GroupChat");
-                    
                     client.connect(serverIP, Integer.parseInt(port), user);
                     isGroup = true;
                     chatUser = "GroupChat";
@@ -155,19 +155,20 @@ public class ClientView extends Thread {
             }
         });
 
-        // 发�?�消�???
+        // 发送消息
         btn_send.addActionListener(new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
 
                 String message = txt_msg.getText();
                 if (!message.isEmpty() && !isGroup) {
-                	System.out.println("p2p chat");
+                    System.out.println("p2p chat");
                     client.sendMessage("P2P[#]" + message + "[#]" + chatUser);
                     receiveMessage(currentUser, message);
                     txt_msg.setText("");
                 } else if (!message.isEmpty() && isGroup) {
-                	System.out.println("group chat");
+                    System.out.println("group chat");
                     client.sendMessage("GROUP[#]" + message);
                     txt_msg.setText("");
                     receiveMessage(currentUser, message);
@@ -178,7 +179,7 @@ public class ClientView extends Thread {
             }
         });
 
-        // 发�?�文�???
+        // 发送文件
         btn_sendFile.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -202,7 +203,7 @@ public class ClientView extends Thread {
             }
         });
 
-        // 切换窗口，点击左侧�?�择不同窗口对象
+        // 切换窗口，点击左侧选择不同窗口对象
         userList.addListSelectionListener(new ListSelectionListener() {
 
             public void valueChanged(ListSelectionEvent e) {
@@ -251,9 +252,9 @@ public class ClientView extends Thread {
         txt_hostIP = new JTextField();
         txt_name = new JTextField("");
         btn_start = new JButton("连接");
-        btn_stop = new JButton("�???�???");
-        btn_send = new JButton("发�??");
-        btn_sendFile = new JButton("发�?�文�???");
+        btn_stop = new JButton("退出");
+        btn_send = new JButton("发送");
+        btn_sendFile = new JButton("发送文件");
 
         listModel = new DefaultListModel();
         userList = new JList(listModel);
@@ -322,7 +323,7 @@ public class ClientView extends Thread {
         panel.add(btn_send);
 
         southPanel.add(panel, "South");
-        southPanel.setBorder(new TitledBorder("发�??"));
+        southPanel.setBorder(new TitledBorder("发送"));
 
         rightSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, rightScroll, southPanel);
         rightSplit.setDividerLocation(350);
@@ -351,14 +352,15 @@ public class ClientView extends Thread {
 
         frame.setVisible(true);
     }
-    
-    //把信息message显示到用户user的文字域�???
+
+    //把信息message显示到用户user的文字域
     public void receiveMessage(String user, String message) {
         textArea.append(user + " :\r\n");
         textArea.append("        ");
         textArea.append(message);
         textArea.append("\r\n\r\n");
     }
+
     //更新窗口，如果要更新的窗口就是当前窗口，那么直接添加文字，如果不是，就显示一条新消息提醒
     public void updateGUI(String command, String message, String sender) {
         if (command.equals("GROUP")) {
