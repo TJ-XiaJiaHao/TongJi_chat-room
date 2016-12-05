@@ -11,8 +11,12 @@ public class ServerMain {
     try {
       //int port = Integer.parseInt(args[0]);
       int port = 8080;
-      ChatServer cs = new ChatServer(port);
-      FileServer fs = new FileServer(port + 1);
+      
+      
+      ChatServer.port = port;
+      FileServer.port = port+1;
+      ChatServer cs = ChatServer.getChatServer();
+      FileServer fs = FileServer.getFileServer();
       cs.start();
       fs.start();
     } catch (IOException e) {

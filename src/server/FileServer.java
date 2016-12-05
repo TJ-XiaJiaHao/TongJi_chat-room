@@ -7,9 +7,18 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class FileServer extends Thread {
+  public static int port = -1;
+  private static FileServer instance = null;
+  public static FileServer getFileServer() throws IOException {
+	  if(instance == null) {
+		  if(port == -1)port = 8081;
+		  instance = new FileServer(port);
+	  }
+	  return instance;
+  }
   private List<ClientThread> clients = new ArrayList<ClientThread>();
   private ServerSocket server;
-  public FileServer(int port) throws IOException {
+  private FileServer(int port) throws IOException {
     server = new ServerSocket(port);
     System.out.println("FileServer start at 127.0.0.1:" + port);
   }
