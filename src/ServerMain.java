@@ -9,12 +9,7 @@ public class ServerMain {
       //return;
     }
     try {
-      //int port = Integer.parseInt(args[0]);
-      int port = 8080;
-      
-      
-      ChatServer.port = port;
-      FileServer.port = port+1;
+      int port = 8080;//Integer.parseInt(args[0]);
       ChatServer cs = ChatServer.getChatServer();
       FileServer fs = FileServer.getFileServer();
       cs.start();

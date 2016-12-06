@@ -10,15 +10,17 @@ public class FileServer extends Thread {
   public static int port = -1;
   private static FileServer instance = null;
   public static FileServer getFileServer() throws IOException {
-	  if(instance == null) {
-		  if(port == -1)port = 8081;
-		  instance = new FileServer(port);
-	  }
-	  return instance;
+	if(port == -1) port = 8081;
+	if(instance == null) {
+		  if(instance == null) {
+			  instance = new FileServer(port);
+		  }
+	}
+	return instance;
   }
   private List<ClientThread> clients = new ArrayList<ClientThread>();
   private ServerSocket server;
-  private FileServer(int port) throws IOException {
+  public FileServer(int port) throws IOException {
     server = new ServerSocket(port);
     System.out.println("FileServer start at 127.0.0.1:" + port);
   }
@@ -136,10 +138,10 @@ public class FileServer extends Thread {
           String dest = null;
           boolean toAll = false;
           long fileLength = getter.readLong();
-          if (command.equals("GROUP")) {// Ⱥ���ļ�
+          if (command.equals("GROUP")) {// 群发文件
             sendBasicInfoToAllUser("GROUP[#]" + fileName + "[#]" + username, fileLength);
             toAll = true;
-          } else if (command.equals("P2P")) {// ˽���ļ�
+          } else if (command.equals("P2P")) {// 私发文件
             dest = stringTokenizer.nextToken();
             sendBasicInfoToSpecificUser("P2P[#]" + fileName + "[#]" + username, fileLength, dest);
           }

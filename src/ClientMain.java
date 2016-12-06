@@ -1,15 +1,17 @@
+import client.ClientView;
+import client.SuperClient;
+import client.Client;
 import java.io.IOException;
-
-import client_aview.ClientView;
-import client_business.Client;
 
 public class ClientMain {
   public static void main(String args[]) {
-    ClientView cv = new ClientView();
-    Client c = new Client();
-    cv.setClientThread(c);
-    c.setClientViewThread(cv);
-    cv.start();
-    c.start();
+	SuperClient superClient = new SuperClient();
+	superClient.start();
+//    ClientView cv = new ClientView();
+//    Client c = new Client();
+//    cv.setClientThread(c);
+//    c.setClientViewThread(cv);
+//    cv.start();
+//    c.start();
   }
 }

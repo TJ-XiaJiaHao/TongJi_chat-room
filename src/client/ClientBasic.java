@@ -1,7 +1,6 @@
-package client_dataTransfer;
+package client;
 
 import java.net.*;
-import client_business.Client;
 
 abstract public class ClientBasic extends Thread {
 	  protected String serverIP;

@@ -1,11 +1,8 @@
-package client_dataTransfer;
+package client;
 
 import java.io.*;
 import java.net.*;
 import java.util.StringTokenizer;
-
-import client_business.Client;
-
 import java.util.Random;
 
 public class FileClient extends ClientBasic {
@@ -13,6 +10,7 @@ public class FileClient extends ClientBasic {
   DataInputStream getter;
   ListenerThread listener;
 
+  public void stopFileThread() { stopThread = true; }
 
   public FileClient(String serverIP, int port, String username, Client parentThread) throws IOException {
     this.serverIP = serverIP;
@@ -27,13 +25,11 @@ public class FileClient extends ClientBasic {
     listener.start();
   }
 
-  @Override
-  public void stopThread() { stopThread = true; }
-  public void send(String... info) {
+  public void sendFile(String info, String filename) {
     try {
-      File file = new File(info[1]);
+      File file = new File(filename);
       FileInputStream fis = new FileInputStream(file);
-      sender.writeUTF(info[0]);
+      sender.writeUTF(info);
       sender.writeLong(file.length());
       byte[] buff = new byte[1024];
       int length = 0;
@@ -46,7 +42,6 @@ public class FileClient extends ClientBasic {
     }
   }
 
-  @Override
   public void run() {
     try {
       while (!stopThread) {
@@ -92,4 +87,22 @@ public class FileClient extends ClientBasic {
     public void shutdown() { stop = true; }
   }
 
+  @Override
+  public void send(String... info) {
+	// TODO Auto-generated method stub
+	  try {
+	      File file = new File(info[1]);
+	      FileInputStream fis = new FileInputStream(file);
+	      sender.writeUTF(info[0]);
+	      sender.writeLong(file.length());
+	      byte[] buff = new byte[1024];
+	      int length = 0;
+	      while ((length = fis.read(buff, 0, buff.length)) > 0) {
+	        sender.write(buff, 0, length);
+	        sender.flush();
+	      }
+	    } catch (Exception e) {
+	      // 
+	    }
+  }
 }
