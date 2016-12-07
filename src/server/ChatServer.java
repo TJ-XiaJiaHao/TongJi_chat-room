@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import client.Client.receiveMessage;
+
 public class ChatServer extends Thread {
   private static ChatServer instance = null;
   private static int port = -1;

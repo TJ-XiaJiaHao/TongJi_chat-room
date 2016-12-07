@@ -150,28 +150,49 @@ public class ClientView extends Thread {
                 System.exit(0);
             }
         });
-
+        
         // 发送消息
         btn_send.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-
-                String message = txt_msg.getText();
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String message = txt_msg.getText();
                 if (!message.isEmpty() && !isGroup) {
                     client.sendMessage("P2P[#]" + message + "[#]" + chatUser);
                     receiveMessage(currentUser, message);
-                    txt_msg.setText("");
                 } else if (!message.isEmpty() && isGroup) {
                     client.sendMessage("GROUP[#]" + message);
-                    txt_msg.setText("");
                     receiveMessage(currentUser, message);
                 } else {
                     JOptionPane.showMessageDialog(frame, "消息不能为空",
                                                   "", JOptionPane.WARNING_MESSAGE);
                 }
-            }
-        });
+                txt_msg.setText("");
+			}
+		});
+        
+//        // 发送消息
+//        btn_send.addActionListener(new ActionListener() {
+//
+//            public void actionPerformed(ActionEvent e) {
+//                // TODO Auto-generated method stub
+//
+//                String message = txt_msg.getText();
+//                if (!message.isEmpty() && !isGroup) {
+//                    client.sendMessage("P2P[#]" + message + "[#]" + chatUser);
+//                    receiveMessage(currentUser, message);
+//                    txt_msg.setText("");
+//                } else if (!message.isEmpty() && isGroup) {
+//                    client.sendMessage("GROUP[#]" + message);
+//                    txt_msg.setText("");
+//                    receiveMessage(currentUser, message);
+//                } else {
+//                    JOptionPane.showMessageDialog(frame, "消息不能为空",
+//                                                  "", JOptionPane.WARNING_MESSAGE);
+//                }
+//            }
+//        });
 
         // 发送文件
         btn_sendFile.addActionListener(new ActionListener() {
@@ -226,7 +247,7 @@ public class ClientView extends Thread {
             }
         });
     }
-
+    
     private void initialGUI() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         UIManager.put("RootPane.setupButtonVisible", false);
@@ -351,10 +372,19 @@ public class ClientView extends Thread {
         textArea.append(message);
         textArea.append("\r\n\r\n");
     }
-
-    public void updateGUI(String command, String message, String sender) {
-        if (command.equals("GROUP")) {
-            if (chatUser.equals("GroupChat")) {
+    
+    public interface updateGUI {
+    	public void updateGUI(String command, String message, String sender);
+    }
+    
+    public class updateForGroup implements updateGUI {
+    	public updateForGroup() {
+			// TODO Auto-generated constructor stub
+		}
+    	@Override
+    	public void updateGUI(String command, String message, String sender) {
+    		// TODO Auto-generated method stub
+    		if (chatUser.equals("GroupChat")) {
                 receiveMessage(sender, message);
             } else {
                 String name = (String)listModel.elementAt(0);
@@ -362,10 +392,35 @@ public class ClientView extends Thread {
                 listModel.add(0, name + "(New Message)");
             }
             return;
-        }
+    	}
+    }
+    public class updateForOFFINE implements updateGUI {
+    	@Override
+    	public void updateGUI(String command, String message, String sender) {
+    		// TODO Auto-generated method stub
+    		for (int i = 0; i < listModel.size(); i++) {
+                String name = (String)listModel.elementAt(i);
+                if (name.contains(message)) {
+                    listModel.remove(i);
+                    return;
+                }
+            }
+    	}
+    }
+    public class updateForFile implements updateGUI {
 
-        if (command.equals("P2P")) {
-            if (chatUser.equals(sender)) {
+		@Override
+		public void updateGUI(String command, String message, String sender) {
+			// TODO Auto-generated method stub
+			JOptionPane.showMessageDialog(frame, message, "系统消息", JOptionPane.INFORMATION_MESSAGE);
+		}
+    	
+    }
+    public class updateForP2P implements updateGUI {
+    	@Override
+    	public void updateGUI(String command, String message, String sender) {
+    		// TODO Auto-generated method stub
+    		if (chatUser.equals(sender)) {
                 receiveMessage(sender, message);
             } else {
                 for (int i = 0; i < listModel.size(); i++) {
@@ -377,25 +432,62 @@ public class ClientView extends Thread {
                     }
                 }
             }
-            return;
-        }
-
-        if (command.equals("ONLINE")) {
-            listModel.addElement(message);
-        }
-
-        if (command.equals("OFFLINE")) {
-            for (int i = 0; i < listModel.size(); i++) {
-                String name = (String)listModel.elementAt(i);
-                if (name.contains(message)) {
-                    listModel.remove(i);
-                    return;
-                }
-            }
-        }
-
-        if (command.equals("FILE")) {
-            JOptionPane.showMessageDialog(frame, message, "系统消息", JOptionPane.INFORMATION_MESSAGE);
-        }
+    	}
     }
+    public class updateForONLINE implements updateGUI {
+    	@Override
+    	public void updateGUI(String command, String message, String sender) {
+    		// TODO Auto-generated method stub
+    		listModel.addElement(message);
+    	}
+    }
+    
+    
+//    
+//    public void updateGUI(String command, String message, String sender) {
+//        if (command.equals("GROUP")) {
+//            if (chatUser.equals("GroupChat")) {
+//                receiveMessage(sender, message);
+//            } else {
+//                String name = (String)listModel.elementAt(0);
+//                listModel.remove(0);
+//                listModel.add(0, name + "(New Message)");
+//            }
+//            return;
+//        }
+//
+//        if (command.equals("P2P")) {
+//            if (chatUser.equals(sender)) {
+//                receiveMessage(sender, message);
+//            } else {
+//                for (int i = 0; i < listModel.size(); i++) {
+//                    String name = (String)listModel.elementAt(i);
+//                    if (name.contains(sender)) {
+//                        listModel.remove(i);
+//                        listModel.add(i, name + "(New Message)");
+//                        return;
+//                    }
+//                }
+//            }
+//            return;
+//        }
+//
+//        if (command.equals("ONLINE")) {
+//            listModel.addElement(message);
+//        }
+//
+//        if (command.equals("OFFLINE")) {
+//            for (int i = 0; i < listModel.size(); i++) {
+//                String name = (String)listModel.elementAt(i);
+//                if (name.contains(message)) {
+//                    listModel.remove(i);
+//                    return;
+//                }
+//            }
+//        }
+//
+//        if (command.equals("FILE")) {
+//            JOptionPane.showMessageDialog(frame, message, "系统消息", JOptionPane.INFORMATION_MESSAGE);
+//        }
+//    }
 }
