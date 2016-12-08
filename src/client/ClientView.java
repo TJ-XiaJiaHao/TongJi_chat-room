@@ -14,7 +14,25 @@ import java.util.StringTokenizer;
 
 
 public class ClientView extends Thread {
-
+	public class normal {
+		public static final String emptyIpPort = "IP地址和端口不能为空";
+		public static final String emptyUser = "用户名不能为空";
+		public static final String emptyMessage = "消息不能为空";
+		public static final String port = "8080";
+		public static final String connect = "连接";
+		public static final String exit = "退出";
+		public static final String send = "发送";
+		public static final String sendFile = "发送文件";
+		public static final String ip = "端口";
+		public static final String hostIP = "服务器IP";
+		public static final String userName = "姓名";
+		public static final String connectInfo = "连接信息";
+		public static final String messageContext = "聊天消息";
+		public static final String onlineUser = "在线用户";
+		public static final String title = 	"有聊";
+		public static final String picUrl = "chat.png";
+		public static final String systemMessage = "系统消息";
+	}
     private JFrame frame;
     private JList userList;
     private JTextArea textArea;
@@ -121,10 +139,10 @@ public class ClientView extends Thread {
                 String user = txt_name.getText();
 
                 if (ip.isEmpty() || port.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "IP地址和端口不能为空",
+                    JOptionPane.showMessageDialog(frame, normal.emptyIpPort, //"IP地址和端口不能为空",
                                                   "", JOptionPane.WARNING_MESSAGE);
                 } else if (user.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "用户名不能为空",
+                    JOptionPane.showMessageDialog(frame, normal.emptyUser, //"用户名不能为空",
                                                   "", JOptionPane.WARNING_MESSAGE);
                 } else {
                     serverIP = ip;
@@ -165,7 +183,7 @@ public class ClientView extends Thread {
                     client.sendMessage("GROUP[#]" + message);
                     receiveMessage(currentUser, message);
                 } else {
-                    JOptionPane.showMessageDialog(frame, "消息不能为空",
+                    JOptionPane.showMessageDialog(frame, normal.emptyMessage, //"消息不能为空",
                                                   "", JOptionPane.WARNING_MESSAGE);
                 }
                 txt_msg.setText("");
@@ -261,13 +279,13 @@ public class ClientView extends Thread {
         textArea.setForeground(Color.gray);
 
         txt_msg = new JTextArea();
-        txt_port = new JTextField("8080");
+        txt_port = new JTextField(normal.port);//"8080");
         txt_hostIP = new JTextField();
         txt_name = new JTextField("");
-        btn_start = new JButton("连接");
-        btn_stop = new JButton("退出");
-        btn_send = new JButton("发送");
-        btn_sendFile = new JButton("发送文件");
+        btn_start = new JButton(normal.connect); //"连接");
+        btn_stop = new JButton(normal.exit); //"退出");
+        btn_send = new JButton(normal.send); //"发送");
+        btn_sendFile = new JButton(normal.sendFile); //"发送文件");
 
         listModel = new DefaultListModel();
         userList = new JList(listModel);
@@ -285,7 +303,7 @@ public class ClientView extends Thread {
         JLabel label;
 
         constraints.weightx = 1.0;
-        label = new JLabel("端口");
+        label = new JLabel(normal.ip); //"端口");
         gridBagLayout.setConstraints(label, constraints);
         northPanel.add(label);
 
@@ -294,7 +312,7 @@ public class ClientView extends Thread {
         northPanel.add(txt_port);
 
         constraints.weightx = 1.0;
-        label = new JLabel("服务器IP");
+        label = new JLabel(normal.hostIP); //"服务器IP");
         gridBagLayout.setConstraints(label, constraints);
         northPanel.add(label);
 
@@ -303,7 +321,7 @@ public class ClientView extends Thread {
         northPanel.add(txt_hostIP);
 
         constraints.weightx = 1.0;
-        label = new JLabel("姓名");
+        label = new JLabel(normal.userName); //"姓名");
         gridBagLayout.setConstraints(label, constraints);
         northPanel.add(label);
 
@@ -315,13 +333,13 @@ public class ClientView extends Thread {
         gridBagLayout.setConstraints(btn_stop, constraints);
         northPanel.add(btn_stop);
 
-        northPanel.setBorder(new TitledBorder("连接信息"));
+        northPanel.setBorder(new TitledBorder(normal.connectInfo)); //"连接信息"));
 
         rightScroll = new JScrollPane(textArea);
-        rightScroll.setBorder(new TitledBorder("聊天消息"));
+        rightScroll.setBorder(new TitledBorder(normal.messageContext)); //"聊天消息"));
 
         leftScroll = new JScrollPane(userList);
-        leftScroll.setBorder(new TitledBorder("在线用户"));
+        leftScroll.setBorder(new TitledBorder(normal.onlineUser)); //"在线用户"));
 
         msgScroll = new JScrollPane(txt_msg);
 
@@ -336,7 +354,7 @@ public class ClientView extends Thread {
         panel.add(btn_send);
 
         southPanel.add(panel, "South");
-        southPanel.setBorder(new TitledBorder("发送"));
+        southPanel.setBorder(new TitledBorder(normal.send)); //"发送"));
 
         rightSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, rightScroll, southPanel);
         rightSplit.setDividerLocation(350);
@@ -348,10 +366,10 @@ public class ClientView extends Thread {
                                      eastPanel);
         centerSplit.setDividerLocation(250);
 
-        frame = new JFrame("有聊");
+        frame = new JFrame(normal.title); //"有聊");
         frame.setSize(1024, 768);
 
-        frame.setIconImage(toolkit.createImage(ClientView.class.getResource("chat.png")));
+        frame.setIconImage(toolkit.createImage(ClientView.class.getResource(normal.picUrl))); //"chat.png")));
 
         frame.setLayout(new BorderLayout());
         frame.add(northPanel, "North");
@@ -412,7 +430,7 @@ public class ClientView extends Thread {
 		@Override
 		public void updateGUI(String command, String message, String sender) {
 			// TODO Auto-generated method stub
-			JOptionPane.showMessageDialog(frame, message, "系统消息", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(frame, message, normal.systemMessage, JOptionPane.INFORMATION_MESSAGE); //"系统消息",
 		}
     	
     }
