@@ -1,4 +1,7 @@
 eclipse.preferences.version=1
 encoding//src/client_aview/ClientView.java=UTF-8
+<<<<<<< HEAD
 encoding//src/server/ChatThread.java=UTF-8
 encoding//src/server/FileThread.java=UTF-8
+=======
+>>>>>>> a7d1e857f98f5c8713371ba671aa4c25df015acb
