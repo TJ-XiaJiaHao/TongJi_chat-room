@@ -1,6 +1,6 @@
 package client;
 
-import java.net.*;
+import java.net.Socket;
 
 abstract public class ClientBasic extends Thread {
 	  protected String serverIP;
@@ -16,3 +16,4 @@ abstract public class ClientBasic extends Thread {
 	  abstract public void send(String...arr);
 	  abstract public void run();
 }
+

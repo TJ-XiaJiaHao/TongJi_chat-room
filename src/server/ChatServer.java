@@ -1,44 +1,48 @@
 package server;
 
-import java.io.*;
-import java.net.*;
 import java.util.List;
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
-import client.Client.receiveMessage;
-
-public class ChatServer extends Thread {
-  private static ChatServer instance = null;
-  private static int port = -1;
-  public static ChatServer getChatServer() throws IOException {
-	  if(instance == null) {
-		if(port == -1) port = 8080;
-		  instance = new ChatServer(port);
-		}
-	  return instance;
-  }
-  
-public List<ChatThread> getClients() {
-	return clients;
+//聊天主线程
+public class ChatServer extends Thread{
+	//单例模式-参数
+	private static ChatServer instance = null;
+	private static int port = 8080;
+	private static List<ChatThread> clients = new ArrayList<ChatThread>();	//在线用户集合
+	private ServerSocket serverSocket;
+	
+	//单例模式-get函数
+	public static ChatServer getChatServer() throws IOException {
+		if(instance == null)
+			instance = new ChatServer(port);
+		return instance;
+	}
+	
+	//构造函数
+	public ChatServer(int port) throws IOException{
+		serverSocket = new ServerSocket(port);	//绑定socket
+		System.out.println("ChatServer start at 127.0.0.1:" + port);
+	}
+	
+	//获取在线客户端
+	public static List<ChatThread> getClients() {
+		return clients;
+	}
+	 
+	 //服务器主程序
+	public void run() {
+		 while(true) {
+			 try {
+				 ChatThread chatThread = new ChatThread(serverSocket.accept());
+				 chatThread.start();
+				 clients.add(chatThread);
+			 } catch (IOException e) {
+				// TODO: handle exception
+				 e.printStackTrace();
+			}
+		 }
+	 }
+	
 }
-  private List<ChatThread> clients = new ArrayList<ChatThread>();
-  private ServerSocket server;
-  public ChatServer(int port) throws IOException {
-    server = new ServerSocket(port);
-    System.out.println("ChatServer start at 127.0.0.1:" + port);
-  }
-  // 服务器主程序
-  public void run() {
-    while (true) {
-      try {
-    	  ChatThread client = new ChatThread(server.accept(),this);
-        client.start();
-        clients.add(client);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  }
