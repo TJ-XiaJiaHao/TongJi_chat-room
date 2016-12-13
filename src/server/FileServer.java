@@ -30,7 +30,7 @@ public class FileServer extends Thread{
 	public void run() {
 		while (true) {
 			try {
-				FileThread client = new FileThread(serverSocket.accept());
+				FileThread client = new FileThread(serverSocket.accept(), this);
 		        client.start();
 		        clients.add(client);
 		      } catch (IOException e) {

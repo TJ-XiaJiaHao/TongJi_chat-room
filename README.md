@@ -29,7 +29,7 @@
 
 主服务器负责处理数据的有FileServer和ChatServer两个类，分别处理文件传输和信息传输，一台服务器上只需要执行一遍就可以了，所以把FileServer和ChatServer做成单例类的形式
 
-![SingalPattern](https://github.com/justPlay197/DesignPattern/blob/master/images/SingalPattern.jpg)
+![SinglePattern](https://github.com/justPlay197/DesignPattern/blob/master/images/SingalPattern.jpg)
 
 ###过滤器模式
 

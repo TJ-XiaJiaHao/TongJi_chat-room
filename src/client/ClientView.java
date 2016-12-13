@@ -34,11 +34,12 @@ import javax.swing.event.ListSelectionListener;
 
 
 public class ClientView extends Thread{
-	//	定义各项参数
+	//	定义各项常量
 	public class constant {
 		public static final String emptyIpPort = "IP地址和端口不能为空";
 		public static final String emptyUser = "用户名不能为空";
 		public static final String emptyMessage = "消息不能为空";
+		public static final String illegalUsername = "用户名不能有[#]字符";
 		public static final String port = "8080";
 		public static final String connect = "连接";
 		public static final String exit = "退出";
@@ -290,6 +291,9 @@ public class ClientView extends Thread{
                 } else if (username.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, constant.emptyUser, 
                                                   "", JOptionPane.WARNING_MESSAGE);
+                } else if(username.contains("[#]")) {
+                	JOptionPane.showMessageDialog(frame, constant.illegalUsername, 
+                            "", JOptionPane.WARNING_MESSAGE);
                 } else {
                     serverIP = ip;
                     serverPORT = port;
@@ -469,6 +473,8 @@ public class ClientView extends Thread{
     public interface updateGUI {
     	public void updateGUI(String command, String message, String sender);
     }
+    
+    //	策略模式-群聊
     public class updateForGroup implements updateGUI {
     	public updateForGroup() {
 			// TODO Auto-generated constructor stub
@@ -486,6 +492,7 @@ public class ClientView extends Thread{
             return;
     	}
     }
+    
     public class updateForOFFINE implements updateGUI {
     	@Override
     	public void updateGUI(String command, String message, String sender) {
@@ -499,6 +506,7 @@ public class ClientView extends Thread{
             }
     	}
     }
+    
     public class updateForFile implements updateGUI {
 
 		@Override
@@ -508,6 +516,8 @@ public class ClientView extends Thread{
 		}
     	
     }
+    
+    
     public class updateForP2P implements updateGUI {
     	@Override
     	public void updateGUI(String command, String message, String sender) {
@@ -523,6 +533,8 @@ public class ClientView extends Thread{
             }
     	}
     }
+    
+    
     public class updateForONLINE implements updateGUI {
     	@Override
     	public void updateGUI(String command, String message, String sender) {

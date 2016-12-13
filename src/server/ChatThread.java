@@ -14,6 +14,10 @@ public class ChatThread extends Thread{
 	private BufferedReader getter;
 	private PrintWriter sender;
 	private String username;
+	//	过滤器-相关变量
+	private ChatCriteria chatCriteriaOthers = new ChatCriteriaOthers();
+	private ChatCriteria chatCriteriaOne = new ChatCriteriaOne();
+	private ChatCriteria chatCriteriaOff = new ChatCriteriaOff(); 
 	//	函数-获取相关参数
 	public PrintWriter getSender() { return sender; }
 	public int getPort() { return socket.getPort(); }
@@ -22,7 +26,7 @@ public class ChatThread extends Thread{
 	public String getIdentifier() { return socket.getInetAddress().getHostAddress() + ":" + socket.getPort(); }
 
 	
-	public ChatThread(Socket socket) {
+	public ChatThread(Socket socket, ChatServer chatServer) {
 		try {
 			this.socket = socket;
 			this.getter = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -33,12 +37,10 @@ public class ChatThread extends Thread{
 			//	将新上线用户信息群发给其他所有在线用户
 			sendToAllUser("ONLINE[#]" + username + "[#]" + getIP() + "[#]" + getPort());
 	        // 	将当前在线用户信息发送给新上线用户
-			for (int i = 0; i < clients.size(); ++i) {
-				if (clients.get(i).getIdentifier().equals(this.getIdentifier()))
-					continue;
-				sender.println("INFO[#]" + clients.get(i).getUsername() + "[#]"
-					+ clients.get(i).getIP() + "[#]" + clients.get(i).getPort());
-		        }
+			List<ChatThread> others = chatCriteriaOthers.meetCriteria(clients, this.getIdentifier());
+		    for (ChatThread chatThread : others) {
+		    	sender.println("INFO[#]" + chatThread.getUsername() + "[#]" + chatThread.getIP() + "[#]" + chatThread.getPort());
+		    }
 			sender.flush();
 			System.out.println("ChatServer: [ONLINE] [" + username + "] [" + getIdentifier() + "]");
 		} catch (IOException e) {
@@ -76,27 +78,23 @@ public class ChatThread extends Thread{
     }
 
 	// 	群发消息
-    private void sendToAllUser(String message) {
-    	List<ChatThread> clients = ChatServer.getClients();
-    	for (int i = 0; i < clients.size(); ++i) {
-    		if (clients.get(i).getIdentifier().equals(this.getIdentifier()))
-    			continue;
-    		clients.get(i).getSender().println(message);
-    		clients.get(i).getSender().flush();
-      }
-    }
+	private void sendToAllUser(String message) {
+		 List<ChatThread> res = chatCriteriaOthers.meetCriteria(ChatServer.getClients(), this.getIdentifier());
+		 for (ChatThread chatThread : res) {
+			 chatThread.getSender().println(message);
+			 chatThread.getSender().flush();
+		 }
+	 }
 
     // 	私聊消息
-    private void sendToSpecificUser(String message, String dest) {
-    	List<ChatThread> clients = ChatServer.getClients();
-    	for (int i = 0; i < clients.size(); ++i) {
-    		if (clients.get(i).getUsername().equals(dest)) {
-    			clients.get(i).getSender().println(message);
-    			clients.get(i).getSender().flush();
-    			}
-    		}
-    }
-
+	private void sendToSpecificUser(String message, String dest) {
+		 List<ChatThread> res = chatCriteriaOne.meetCriteria(ChatServer.getClients(), dest);
+	   for (ChatThread chatThread : res) {
+		   chatThread.getSender().println(message);
+		   chatThread.getSender().flush();
+	   }
+	 }
+	
     //	用户下线，转告其他用户，关闭socket资源并移除该线程
     private void offline() {
     	List<ChatThread> clients = ChatServer.getClients();
@@ -106,14 +104,13 @@ public class ChatThread extends Thread{
     		getter.close();
     		sender.close();
     		socket.close();
-    		for (int i = 0; i < clients.size(); ++i) {
-    			if (clients.get(i).getIdentifier().equals(this.getIdentifier())) {
-    				clients.remove(i);
-    				return;
-    			}
-    		}
-    		} catch (IOException e) {
+    		List<ChatThread> off = chatCriteriaOff.meetCriteria(clients, this.getIdentifier());
+    	     for (ChatThread ct : off) {
+    	    	 clients.remove(ct);
+    	         return;
+    	     }
+    	} catch (IOException e) {
     			e.printStackTrace();
-    		}
     	}
+    }
 }

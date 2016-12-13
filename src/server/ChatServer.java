@@ -35,7 +35,7 @@ public class ChatServer extends Thread{
 	public void run() {
 		 while(true) {
 			 try {
-				 ChatThread chatThread = new ChatThread(serverSocket.accept());
+				 ChatThread chatThread = new ChatThread(serverSocket.accept(), this);
 				 chatThread.start();
 				 clients.add(chatThread);
 			 } catch (IOException e) {
