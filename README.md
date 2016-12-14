@@ -96,22 +96,14 @@
 	chatClient = clientFactory.getClient("ChatClient", ip, port, username,this);
 	fileClient = clientFactory.getClient("FileClient", ip, port, username, this);
 ```
-问题1
-
-在从工厂中获取对象的时候如果单词拼错就无法获取到对象，我们在重构过程中就是一不小心少写了一个i而导致系统无法正常运转，并且一直无法找到Bug的来源。
-
-改进1
-
-取消字符串的输入，改用数字012...代替，出错率大大降低。
-
-问题2
-
-虽然采用数字可以有效降低出错率，但是可读性很差，获取对象时并不能确保得到的就是要的client类型
-
-改进2
-
-提供多个工厂方法，分别用来创建不同的对象
-
+问题1:<br />
+在从工厂中获取对象的时候如果单词拼错就无法获取到对象，我们在重构过程中就是一不小心少写了一个i而导致系统无法正常运转，并且一直无法找到Bug的来源。<br />
+改进1<br />
+取消字符串的输入，改用数字012...代替，出错率大大降低。<br />
+问题2<br />
+虽然采用数字可以有效降低出错率，但是可读性很差，获取对象时并不能确保得到的就是要的client类型<br />
+改进2<br />
+提供多个工厂方法，分别用来创建不同的对象<br />
 ```java
 	//	获取chatclient
 	public ClientBasic getChatClient(String serverIP, int port, String username, Client parentThread) throws IOException{
@@ -133,7 +125,7 @@
 
 主服务器负责处理数据的有FileServer和ChatServer两个类，分别处理文件传输和信息传输，监听端口分别为8080和8081，一台服务器上只能存在一个FileServer和ChatServer，否则就会导致系统紊乱，在每次创建子线程的时候，子线程中都要有一个FileServer或者ChatServer，为了确保安全，决定采用单例模式。
 
-![SinglePattern](https://github.com/justPlay197/DesignPattern/blob/master/images/SingalPattern.jpg)
+![SinglePattern](https://github.com/justPlay197/DesignPattern/blob/master/images/SinglePattern.jpg)
 
 ```java
 	//ChatServer.java：ChatServer单例模式实现
@@ -219,8 +211,6 @@
 我们的BufferedReader和PrintWriter就是装饰模式，在数据传输时，通过BufferedReader来不断监听socket端口，当我们需要发送数据时，就通过PrintWriter网Socket里面传输数据。对应的文件传输的DataOutputStream和DataInputStream也是装饰模式。
 由于Java的IO需要很多性能的各种组合，如果这些性能都是用继承的方法实现的，那么每种组合都需要一个类，这样就会造成大量性能重复的类出现，装饰模式可以尽可能地解决这些问题。在使用IO时，Java的IO是由一些基本的原始流处理器和围绕它们的装饰流处理器所组成的。	
 
-###迭代器模式
-在主服务器上有客户端集合，并且客户端后聊天记录，我们打算把对客户端集合和聊天记录的操作封装到迭代器中，通过类似于hasNext、next、first之类的接口来访问数据集
 
 ###硬编码部分改进
 由于项目成员之间使用mac和windows的不兼容性，使得项目代码在重构的过程中由于文件格式的不同时常会发生乱码，同时，在GUI层过多的菜单内容和消息提示内容内嵌在代码中，要更改的十分困难，所以我们通过声明常量来解决硬编码问题。
@@ -251,12 +241,19 @@
 
 ###代码结构改进
 重构前客户端代码结构
+
 ![ClientBeforeRefactor](https://github.com/justPlay197/DesignPattern/blob/master/images/ClientBeforeRefactor.png)
+
 重构后客户端代码结构
+
 ![ClientAfterRefactor](https://github.com/justPlay197/DesignPattern/blob/master/images/ClientAfterRefactor.png)
+
 重构前服务器端代码结构
+
 ![ServerBeforeRefactor](https://github.com/justPlay197/DesignPattern/blob/master/images/ServerBeforeRefactor.png)
+
 重构后服务器端代码结构
+
 ![ServerAfterRefactor](https://github.com/justPlay197/DesignPattern/blob/master/images/ServerAfterRefactor.png)
 
 
@@ -294,4 +291,5 @@
 ###团队成员
 
 夏佳昊	1452806
+
 陈东仪	1450126
