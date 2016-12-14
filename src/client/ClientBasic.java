@@ -13,7 +13,13 @@ abstract public class ClientBasic extends Thread {
 	  public ClientBasic()  {};
 	  public void stopThread() { stopThread = true; }
 	  
-	  abstract public void send(String...arr);
+	  abstract void init(String name);
+	  abstract void printToSocket(String message);
+	  public final void send(String...arr){
+			 if(arr.length>1)
+				 init(arr[1]);
+			 printToSocket(arr[0]);
+	  }
 	  abstract public void run();
 }
 

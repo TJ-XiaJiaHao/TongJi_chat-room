@@ -32,6 +32,19 @@ public class ChatClient extends ClientBasic {
 	    sender.flush();
 	  }
 
+	  @Override
+	  void init(String name) {
+	  	// TODO Auto-generated method stub
+	  	
+	  }
+	  
+	  @Override
+	  void printToSocket(String message) {
+	  	// TODO Auto-generated method stub
+	  	sender.println(message);
+		sender.flush();
+	  }
+	  
 	  public void run() {
 	    try {
 	      while (!stopThread) {
@@ -64,10 +77,4 @@ public class ChatClient extends ClientBasic {
 	    public void shutdown() { stop = true; }
 	  }
 
-	  @Override
-		public void send(String... message) {
-			System.out.println("cc send!");
-			sender.println(message[0]);
-			sender.flush();
-		}
-	}
+}

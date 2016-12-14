@@ -6,6 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import client.ClientView.updateForFile;
+import client.ClientView.updateForGroup;
+import client.ClientView.updateForOFFINE;
+import client.ClientView.updateForONLINE;
+import client.ClientView.updateForP2P;
+import client.ClientView.updateGUI;
+
 public class Client extends Thread{
 	private ClientFactory clientFactory;
 	private ClientBasic chatClient;
@@ -46,7 +53,7 @@ public class Client extends Thread{
 	    fileClient.stopThread();
 	    stopClient = true;
 	}
-
+	  
 	// 为聊天线程收到新消息提供服务
 	public void receiveMessage(String message) {
 		StringTokenizer tokenizer = new StringTokenizer(message, "[#]");
@@ -56,24 +63,29 @@ public class Client extends Thread{
 	      String ip = tokenizer.nextToken();
 	      String port = tokenizer.nextToken();
 	      chatRecords.put(usr, new ArrayList<String>());
-	      clientView.updateGUI("ONLINE", usr, "");
+	      updateForONLINE update = clientView.new updateForONLINE();
+	      update.updateGUI(usr, "");
 	    } else if (command.equals("GROUP")) {// 群聊消息
 	      String msg = tokenizer.nextToken();
 	      chatRecords.get("GroupChat").add(usr + "[#]" + msg);
-	      clientView.updateGUI("GROUP", msg, usr);
+	      updateForGroup update = clientView.new updateForGroup();
+	      update.updateGUI(msg, usr);
 	    } else if (command.equals("P2P")) {// 私聊消息
 	      String msg = tokenizer.nextToken();
 	      chatRecords.get(usr).add(usr + "[#]" + msg);
-	      clientView.updateGUI("P2P", msg, usr);
+	      updateForP2P update = clientView.new updateForP2P();
+	      update.updateGUI(msg, usr);
 	    } else if (command.equals("OFFLINE")) {// 有人下线
 	      String ip = tokenizer.nextToken();
 	      String port = tokenizer.nextToken();
 	      chatRecords.remove(usr);
-	      clientView.updateGUI("OFFLINE", usr, "");
+	      updateForOFFINE update = clientView.new updateForOFFINE();
+	      update.updateGUI(usr, "");
 	    } else if (command.equals("FILE")) {
 	      String filename = tokenizer.nextToken();
-	      String username = tokenizer.nextToken();
-	      clientView.updateGUI("FILE", username + "向你发送了文件" + filename, "");
+	      String username = tokenizer.nextToken(); 
+	      updateForFile update = clientView.new updateForFile();
+	      update.updateGUI(username + "向你发送了文件", "");
 	    }
 	  }
 

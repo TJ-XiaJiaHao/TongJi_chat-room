@@ -415,24 +415,73 @@ public class ClientView extends Thread{
         textArea.append("\r\n\r\n");
     }
 
-    //	更新界面
-    public void updateGUI(String command, String message, String sender) {
-        if ("GROUP".equals(command)) {
-            if ("GroupChat".equals(chatUser)) {
+    //	策略模式-更新界面
+    public interface updateGUI {
+    	public void updateGUI(String message, String sender);
+    }
+    
+    //	策略模式-群聊
+    public class updateForGroup implements updateGUI {
+    	public updateForGroup() {
+			// TODO Auto-generated constructor stub
+		}
+    	@Override
+    	public void updateGUI(String message, String sender) {
+    		if ("GroupChat".equals(chatUser)) {
                 receiveMessage(sender, message);
             } else {
                 String name = (String)listModel.elementAt(0);
                 listModel.remove(0);
-                if(name.contains("New Message"))
+                if(name.contains("(New Message)"))
                 	listModel.add(0, name);
                 else
                 	listModel.add(0, name + "(New Message)");
             }
             return;
-        }
+    	}
+    }
 
-        if ("P2P".equals(command)) {
-            if (chatUser.equals(sender)) {
+    //	策略模式-上线
+    public class updateForONLINE implements updateGUI {
+    	@Override
+    	public void updateGUI(String message, String sender) {
+    		// TODO Auto-generated method stub
+    		listModel.addElement(message);
+    	}
+    }
+    
+    //	策略模式-下线
+    public class updateForOFFINE implements updateGUI {
+    	@Override
+    	public void updateGUI(String message, String sender) {
+    		// TODO Auto-generated method stub
+    		for (int i = 0; i < listModel.size(); i++) {
+                String name = (String)listModel.elementAt(i);
+                if (name.contains(message)) {
+                    listModel.remove(i);
+                    return;
+                }
+            }
+    	}
+    }
+    
+    //	策略模式-发送文件
+    public class updateForFile implements updateGUI {
+
+		@Override
+		public void updateGUI(String message, String sender) {
+			// TODO Auto-generated method stub
+			JOptionPane.showMessageDialog(frame, message, constant.systemMessage, JOptionPane.INFORMATION_MESSAGE);
+		}
+    	
+    }
+
+    //	策略模式-私聊
+    public class updateForP2P implements updateGUI {
+    	@Override
+    	public void updateGUI(String message, String sender) {
+    		// TODO Auto-generated method stub
+    		if (chatUser.equals(sender)) {
                 receiveMessage(sender, message);
             } else {
                 for (int i = 0; i < listModel.size(); i++) {
@@ -448,98 +497,6 @@ public class ClientView extends Thread{
                 }
             }
             return;
-        }
-
-        if ("ONLINE".equals(command)) {
-            listModel.addElement(message);
-        }
-
-        if ("OFFLINE".equals(command)) {
-            for (int i = 0; i < listModel.size(); i++) {
-                String name = (String)listModel.elementAt(i);
-                if (name.contains(message)) {
-                    listModel.remove(i);
-                    return;
-                }
-            }
-        }
-
-        if ("FILE".equals(command)) {
-            JOptionPane.showMessageDialog(frame, message, "系统消息", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    //	策略模式-更新界面
-    public interface updateGUI {
-    	public void updateGUI(String command, String message, String sender);
-    }
-    
-    //	策略模式-群聊
-    public class updateForGroup implements updateGUI {
-    	public updateForGroup() {
-			// TODO Auto-generated constructor stub
-		}
-    	@Override
-    	public void updateGUI(String command, String message, String sender) {
-    		// TODO Auto-generated method stub
-    		if (chatUser.equals("GroupChat")) {
-                receiveMessage(sender, message);
-            } else {
-                String name = (String)listModel.elementAt(0);
-                listModel.remove(0);
-                listModel.add(0, name + "(New Message)");
-            }
-            return;
-    	}
-    }
-    
-    public class updateForOFFINE implements updateGUI {
-    	@Override
-    	public void updateGUI(String command, String message, String sender) {
-    		// TODO Auto-generated method stub
-    		for (int i = 0; i < listModel.size(); i++) {
-                String name = (String)listModel.elementAt(i);
-                if (name.contains(message)) {
-                    listModel.remove(i);
-                    return;
-                }
-            }
-    	}
-    }
-    
-    public class updateForFile implements updateGUI {
-
-		@Override
-		public void updateGUI(String command, String message, String sender) {
-			// TODO Auto-generated method stub
-			JOptionPane.showMessageDialog(frame, message, constant.systemMessage, JOptionPane.INFORMATION_MESSAGE);
-		}
-    	
-    }
-    
-    
-    public class updateForP2P implements updateGUI {
-    	@Override
-    	public void updateGUI(String command, String message, String sender) {
-    		// TODO Auto-generated method stub
-    		if (chatUser.equals(sender)) {
-                receiveMessage(sender, message);
-            } else {
-                for (int i = 0; i < listModel.size(); i++) {
-                    String name = (String)listModel.elementAt(i);
-                    listModel.remove(i);
-                    listModel.add(i, name + "(New Message)");
-                }
-            }
-    	}
-    }
-    
-    
-    public class updateForONLINE implements updateGUI {
-    	@Override
-    	public void updateGUI(String command, String message, String sender) {
-    		// TODO Auto-generated method stub
-    		listModel.addElement(message);
     	}
     }
 }

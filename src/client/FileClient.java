@@ -15,6 +15,8 @@ public class FileClient extends ClientBasic {
 	  DataOutputStream sender;
 	  DataInputStream getter;
 	  ListenerThread listener;
+	  File file;    
+	  FileInputStream fis;
 
 	  public void stopFileThread() { stopThread = true; }
 
@@ -94,21 +96,31 @@ public class FileClient extends ClientBasic {
 	  }
 
 	  @Override
-	  public void send(String... info) {
-		// TODO Auto-generated method stub
-		  try {
-		      File file = new File(info[1]);
-		      FileInputStream fileInputStream = new FileInputStream(file);
-		      sender.writeUTF(info[0]);
-		      sender.writeLong(file.length());
-		      byte[] buff = new byte[1024];
-		      int length = 0;
-		      while ((length = fileInputStream.read(buff, 0, buff.length)) > 0) {
-		        sender.write(buff, 0, length);
-		        sender.flush();
-		      }
-		    } catch (Exception e) {
-		      // 
-		    }
+	  void init(String name) {
+	  	// TODO Auto-generated method stub
+	  	try{
+	  	    file = new File(name);
+	  	    fis = new FileInputStream(file);
+	  	}catch(Exception e){
+	  		System.out.println("init error!");
+	  	}
+	  	
 	  }
-	}
+	  
+	  @Override
+	  void printToSocket(String message) {
+	  	// TODO Auto-generated method stub
+	  	try{
+	  		sender.writeUTF(message);
+	  	    sender.writeLong(file.length());
+	  	    byte[] buff = new byte[1024];
+	  	    int length = 0;
+	  	    while ((length = fis.read(buff, 0, buff.length)) > 0) {
+	  	      sender.write(buff, 0, length);
+	  	      sender.flush();
+	  	    }
+	  	}catch(Exception e){
+	  		System.out.println("print to socket error!");
+	  	}
+	  }
+}
