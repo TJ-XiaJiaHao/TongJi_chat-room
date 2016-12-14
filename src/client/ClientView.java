@@ -10,6 +10,8 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -273,6 +275,7 @@ public class ClientView extends Thread{
     
     //	添加事件监听器
     private void addListeners() {
+
     	//	点击连接按钮
     	btn_start.addActionListener(new ActionListener() {	
     		
@@ -321,6 +324,19 @@ public class ClientView extends Thread{
                 System.exit(0);
 			}
 		});
+    	
+    	//    	点击关闭按钮
+    	frame.addWindowListener(new WindowAdapter(){
+    		public void windowClosing(WindowEvent e){
+    			super.windowClosing(e);
+    			if(isOnline) {
+    				client.sendMessage("[OFFLINE]");
+    				client.disconnect();
+    			}
+    			frame.dispose();
+                System.exit(0);
+    		}
+    	});
     	
     	//	点击发送消息按钮
     	btn_send.addActionListener(new ActionListener() {
